@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark light;
+}
+
+body {
+  @apply bg-hotel-bg text-hotel-text font-sans antialiased overflow-hidden;
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  .glass-panel {
+    @apply bg-hotel-surface/90 backdrop-blur-sm border border-hotel-gold/10 shadow-xl;
+  }
+}
