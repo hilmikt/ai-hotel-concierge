@@ -13,11 +13,11 @@ const Modal = ({ isOpen, onClose, title, children }) => {
             />
 
             {/* Modal Content */}
-            <div className="relative w-full max-w-sm bg-hotel-surface dark:bg-hotel-surface border border-white/10 rounded-2xl shadow-xl flex flex-col overflow-hidden animate-fade-in">
+            <div className="relative w-full max-w-sm bg-hotel-cream dark:bg-hotel-surface border border-black/5 dark:border-white/10 rounded-2xl shadow-2xl dark:shadow-xl flex flex-col overflow-hidden animate-fade-in">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-black/5 dark:border-white/5">
                     <h3 className="text-hotel-gold text-lg font-serif">{title}</h3>
-                    <button onClick={onClose} className="text-hotel-muted hover:text-hotel-text transition-colors">
+                    <button onClick={onClose} className="text-hotel-muted hover:text-black dark:hover:text-hotel-text transition-colors">
                         <X size={20} />
                     </button>
                 </div>

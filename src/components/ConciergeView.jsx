@@ -48,13 +48,13 @@ const ConciergeView = () => {
     }, [isDarkMode]);
 
     return (
-        <div className="flex flex-col h-screen bg-hotel-bg dark:bg-hotel-bg text-hotel-text dark:text-hotel-text font-sans transition-colors duration-300 overflow-hidden">
+        <div className="flex flex-col h-[100dvh] bg-hotel-cream dark:bg-hotel-bg text-hotel-text-dark dark:text-hotel-text font-sans transition-colors duration-300 overflow-hidden">
 
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} messages={messages} />
 
             {/* Header - Non-fixed, part of flex flow */}
-            <header className="flex-none z-40 bg-hotel-bg/80 dark:bg-hotel-bg/80 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-4 transition-colors duration-300">
-                <button onClick={toggleSidebar} className="text-hotel-gold hover:text-white transition-colors p-2">
+            <header className="flex-none z-40 bg-hotel-cream/80 dark:bg-hotel-bg/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 h-16 flex items-center justify-between px-4 transition-colors duration-300">
+                <button onClick={toggleSidebar} className="text-hotel-gold hover:text-black dark:hover:text-white transition-colors p-2">
                     <Menu size={24} />
                 </button>
 
@@ -75,7 +75,7 @@ const ConciergeView = () => {
                 <div className="max-w-md mx-auto space-y-6">
                     {/* Welcome Date Divider */}
                     <div className="flex justify-center my-6">
-                        <span className="text-[10px] uppercase tracking-widest text-hotel-muted/50 px-3 py-1 border border-white/5 rounded-full">
+                        <span className="text-[10px] uppercase tracking-widest text-hotel-muted/70 px-3 py-1 border border-black/5 dark:border-white/5 rounded-full">
                             Today
                         </span>
                     </div>
@@ -86,7 +86,7 @@ const ConciergeView = () => {
 
                     {isTyping && (
                         <div className="flex justify-start animate-fade-in">
-                            <div className="bg-hotel-surface border border-hotel-gold/20 rounded-tr-xl rounded-br-xl rounded-bl-xl py-4 px-5 inline-flex items-center space-x-1.5 min-h-[48px]">
+                            <div className="bg-hotel-surface-light dark:bg-hotel-surface border border-hotel-gold/20 rounded-tr-xl rounded-br-xl rounded-bl-xl py-4 px-5 inline-flex items-center space-x-1.5 min-h-[48px]">
                                 <div className="w-1.5 h-1.5 bg-hotel-gold rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                                 <div className="w-1.5 h-1.5 bg-hotel-gold rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                 <div className="w-1.5 h-1.5 bg-hotel-gold rounded-full animate-bounce"></div>
@@ -99,7 +99,7 @@ const ConciergeView = () => {
             </main>
 
             {/* Input Area - Flex None (Stays at bottom) */}
-            <div className="flex-none z-20 bg-hotel-bg/95 dark:bg-hotel-bg/95 backdrop-blur-sm pb-safe-bottom">
+            <div className="flex-none z-20 bg-hotel-cream/95 dark:bg-hotel-bg/95 backdrop-blur-sm pb-safe-bottom">
                 <InputArea onSendMessage={sendMessage} />
             </div>
         </div>

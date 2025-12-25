@@ -13,12 +13,11 @@ const InputArea = ({ onSendMessage }) => {
     };
 
     return (
-    return (
         <div className="w-full px-4 pt-2 pb-6">
             <div className="max-w-md mx-auto">
                 <form
                     onSubmit={handleSubmit}
-                    className="relative flex items-center bg-hotel-surface/90 dark:bg-hotel-surface/90 backdrop-blur-md rounded-2xl border border-black/5 dark:border-white/10 shadow-lg dark:shadow-2xl p-2 pl-4 transition-all focus-within:border-hotel-gold/30 ring-1 ring-black/5 dark:ring-white/5 focus-within:ring-hotel-gold/10"
+                    className="relative flex items-center bg-hotel-surface-light/90 dark:bg-hotel-surface/90 backdrop-blur-md rounded-2xl border border-black/5 dark:border-white/10 shadow-lg dark:shadow-2xl p-2 pl-4 transition-all focus-within:border-hotel-gold/30 ring-1 ring-black/5 dark:ring-white/5 focus-within:ring-hotel-gold/10"
                 >
                     <input
                         type="text"

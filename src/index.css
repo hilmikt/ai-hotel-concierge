@@ -9,7 +9,7 @@
 }
 
 body {
-  @apply bg-hotel-bg text-hotel-text font-sans antialiased overflow-hidden;
+  @apply bg-hotel-cream dark:bg-hotel-bg text-hotel-text-dark dark:text-hotel-text font-sans antialiased overflow-hidden;
 }
 
 @layer utilities {

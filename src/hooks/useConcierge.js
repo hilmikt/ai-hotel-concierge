@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { generateResponse } from '../services/aiService';
 
 const INITIAL_MESSAGE = {
@@ -14,13 +14,16 @@ const LAST_ACTIVE_KEY = 'concierge_last_active';
 const useConcierge = () => {
     // Initialize state from local storage or default
     const [messages, setMessages] = useState(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                console.error("Failed to parse saved messages:", e);
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return parsed;
+                }
             }
+        } catch (e) {
+            console.error("Failed to parse saved messages:", e);
         }
         return [INITIAL_MESSAGE];
     });

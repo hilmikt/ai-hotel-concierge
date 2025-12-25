@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, onClose, messages = [] }) => {
             />
 
             {/* Sidebar Panel */}
-            <div className={`fixed top-0 left-0 bottom-0 w-72 bg-hotel-surface-light dark:bg-hotel-surface border-r border-black/5 dark:border-white/5 z-50 transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`fixed top-0 left-0 h-[100dvh] w-72 max-w-[80vw] bg-hotel-surface-light dark:bg-hotel-surface border-r border-black/5 dark:border-white/5 z-[55] transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
 
                 {/* Header */}
                 <div className="h-16 flex-none flex items-center justify-between px-6 border-b border-black/5 dark:border-white/5">
