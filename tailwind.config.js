@@ -9,14 +9,16 @@ export default {
     extend: {
       colors: {
         hotel: {
-          bg: '#0f0f0f',         // Deep Charcoal
-          surface: '#1a1a1a',    // Soft Onyx
-          text: '#eaeaea',       // Warm Off-White
+          bg: '#0f0f0f',         // Deep Charcoal (Dark Mode BG)
+          surface: '#1a1a1a',    // Soft Onyx (Dark Mode Surface)
+          text: '#eaeaea',       // Warm Off-White (Dark Mode Text)
           muted: '#9a9a9a',      // Muted Gray
           gold: '#C5A059',       // Champagne Gold
-          cream: '#F2F2EF',      // Light mode bg
-          'surface-light': '#fafafa', // Light mode surface
-          'text-dark': '#1c1c1c',     // Light mode text
+
+          // Light Mode Overrides
+          cream: '#ffffff',      // Pure White (Light Mode BG) - Replaced F2F2EF for cleaner look
+          'surface-light': '#f4f4f5', // Zinc-100 (Light Mode Surface)
+          'text-dark': '#18181b',     // Zinc-900 (Light Mode Text)
         }
       },
       fontFamily: {

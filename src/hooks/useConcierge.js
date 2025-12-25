@@ -1,64 +1,95 @@
 import { useState, useCallback } from 'react';
+import { generateResponse } from '../services/aiService';
 
 const INITIAL_MESSAGE = {
     sender: 'ai',
     text: "Good evening, Mr. Mercer. I am Lumi. How may I be of assistance to you during your stay?"
 };
 
-const RESPONSES = [
-    {
-        keywords: ['towel', 'soap', 'amenities', 'shampoo'],
-        text: "Certainly. Housekeeping has been notified. Fresh amenities will be delivered to Room 402 within 15 minutes."
-    },
-    {
-        keywords: ['late', 'checkout', 'leave'],
-        text: "I have checked the availability for you. We are pleased to offer a complimentary late checkout until 2:00 PM tomorrow. Would you like me to confirm this?"
-    },
-    {
-        keywords: ['breakfast', 'dinner', 'food', 'dining', 'timings', 'restaurant'],
-        text: "The Lumiere Brasserie serves breakfast from 6:30 AM to 10:30 AM. Dinner service begins at 6:00 PM. I can reserve a table for you if you wish."
-    },
-    {
-        keywords: ['location', 'map', 'directions', 'where'],
-        text: "We are located in the heart of San Francisco. Here is our location.",
-        actionUrl: "https://maps.google.com/?q=The+Lumiere+San+Francisco+Hotel"
-    },
-    {
-        keywords: ['gym', 'fitness', 'pool', 'spa'],
-        text: "The Wellness Center is located on the 3rd floor. It is open 24 hours for residents. The spa requires a reservation."
-    }
-];
 
-const DEFAULT_RESPONSE = "I understand. I will alert the Concierge Desk to assist you further with that request naturally.";
+
+const STORAGE_KEY = 'concierge_messages';
+const LAST_ACTIVE_KEY = 'concierge_last_active';
 
 const useConcierge = () => {
-    const [messages, setMessages] = useState([INITIAL_MESSAGE]);
+    // Initialize state from local storage or default
+    const [messages, setMessages] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error("Failed to parse saved messages:", e);
+            }
+        }
+        return [INITIAL_MESSAGE];
+    });
+
     const [isTyping, setIsTyping] = useState(false);
 
-    const processMessage = useCallback((text) => {
+    // Daily Reset Logic & Persistence
+    useEffect(() => {
+        const checkReset = () => {
+            const now = new Date();
+            const lastActive = localStorage.getItem(LAST_ACTIVE_KEY);
+
+            if (lastActive) {
+                const lastDate = new Date(parseInt(lastActive));
+
+                // If last active was on a previous day (or specifically before today's 12PM cutoff while now is after)
+                // Simplified Hotel Logic: Reset if last active was BEFORE today 12:00 PM and NOW is AFTER 12:00 PM
+                // Or if it's a completely different calendar day
+
+                // Set cutoff to today 12:00 PM
+                const cutoffToday = new Date();
+                cutoffToday.setHours(12, 0, 0, 0);
+
+                // If now is past cutoff
+                if (now > cutoffToday) {
+                    // And last active was before this cutoff
+                    if (lastDate < cutoffToday) {
+                        // RESET
+                        setMessages([INITIAL_MESSAGE]);
+                        localStorage.removeItem(STORAGE_KEY);
+                    }
+                }
+            }
+
+            // Update last active
+            localStorage.setItem(LAST_ACTIVE_KEY, now.getTime().toString());
+        };
+
+        checkReset();
+        // Check every minute if running long-term, but for now init check is sufficient for reload flow
+    }, []);
+
+    // Save messages on change
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        localStorage.setItem(LAST_ACTIVE_KEY, new Date().getTime().toString());
+    }, [messages]);
+
+
+
+    const processMessage = useCallback(async (text) => {
         setIsTyping(true);
 
-        // Simulate thinking delay (refined, not too fast, not too slow)
-        const delay = Math.random() * 1000 + 1500;
-
-        setTimeout(() => {
-            const lowerText = text.toLowerCase();
-            let response = DEFAULT_RESPONSE;
-            let actionUrl = null;
-
-            const match = RESPONSES.find(r => r.keywords.some(k => lowerText.includes(k)));
-            if (match) {
-                response = match.text;
-                actionUrl = match.actionUrl;
-            }
+        try {
+            const responseText = await generateResponse(text);
 
             setMessages(prev => [...prev, {
                 sender: 'ai',
-                text: response,
-                actionUrl
+                text: responseText
             }]);
+        } catch (error) {
+            console.error("Error processing message:", error);
+            setMessages(prev => [...prev, {
+                sender: 'ai',
+                text: "I apologize, but I'm having trouble connecting right now. Please try again."
+            }]);
+        } finally {
             setIsTyping(false);
-        }, delay);
+        }
     }, []);
 
     const sendMessage = useCallback((text) => {
