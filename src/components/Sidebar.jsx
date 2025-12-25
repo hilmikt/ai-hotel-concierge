@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X, MessageSquareWarning, Megaphone, House, BedDouble, History, Send } from 'lucide-react';
+import { X, MessageSquareWarning, Megaphone, House, BedDouble, History, Send, MessageSquare } from 'lucide-react';
 import Modal from './Modal';
 
-const Sidebar = ({ isOpen, onClose, messages = [] }) => {
+const Sidebar = ({ isOpen, onClose, sessions = [], currentSessionId, onSwitchSession }) => {
     // Mocked data
     const hotelName = "The Grand Budapest";
     const roomNumber = "305";
@@ -12,11 +12,7 @@ const Sidebar = ({ isOpen, onClose, messages = [] }) => {
     const [modalInput, setModalInput] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Filter for user messages only, exclude current session (simplified: just showing last 3 user queries)
-    const previousMessages = messages
-        .filter(m => m.sender === 'user')
-        .slice(-5)
-        .reverse();
+
 
     const handleModalSubmit = (e) => {
         e.preventDefault();
@@ -77,22 +73,43 @@ const Sidebar = ({ isOpen, onClose, messages = [] }) => {
 
                     <div className="h-px bg-black/5 dark:bg-white/5" />
 
-                    {/* Previous Messages Section */}
+                    {/* Recent Chats Section */}
                     <div className="space-y-3">
                         <div className="flex items-center space-x-2 text-hotel-muted">
                             <History size={14} />
-                            <span className="text-[10px] uppercase tracking-widest">Recent Activity</span>
+                            <span className="text-[10px] uppercase tracking-widest">Recent Chats</span>
                         </div>
 
-                        <div className="space-y-2">
-                            {previousMessages.length > 0 ? (
-                                previousMessages.map((msg, idx) => (
-                                    <div key={idx} className="text-sm p-3 rounded-lg bg-hotel-cream dark:bg-hotel-bg border border-black/5 dark:border-white/5 text-hotel-text-dark dark:text-hotel-text/80 truncate">
-                                        "{msg.text}"
-                                    </div>
+                        <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-1">
+                            {sessions && sessions.length > 0 ? (
+                                sessions.map((session) => (
+                                    <button
+                                        key={session.id}
+                                        onClick={() => {
+                                            onSwitchSession(session.id);
+                                            // Optional: Close sidebar on mobile on selection? 
+                                            // The user didn't explicitly ask for this, but it's good UX.
+                                            // Keeping it explicit: user taps, stays in menu until they close it or we decide.
+                                            // Let's keep it manual close for now to match spec "Do not change anything else".
+                                            if (window.innerWidth < 640) onClose();
+                                        }}
+                                        className={`w-full text-left text-sm p-3 rounded-lg border transition-all duration-200 group flex items-start space-x-3 
+                                        ${currentSessionId === session.id
+                                                ? 'bg-hotel-gold text-white border-hotel-gold'
+                                                : 'bg-hotel-cream dark:bg-hotel-bg border-black/5 dark:border-white/5 text-hotel-text-dark dark:text-hotel-text/80 hover:border-hotel-gold/50'
+                                            }`}
+                                    >
+                                        <MessageSquare size={16} className={`flex-none mt-0.5 ${currentSessionId === session.id ? 'text-white' : 'text-hotel-muted group-hover:text-hotel-gold'}`} />
+                                        <div className="truncate">
+                                            <p className="font-medium truncate">{session.title || "New Chat"}</p>
+                                            <p className={`text-xs truncate mt-0.5 ${currentSessionId === session.id ? 'text-white/80' : 'text-hotel-muted'}`}>
+                                                {new Date(session.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' })} • {new Date(session.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </p>
+                                        </div>
+                                    </button>
                                 ))
                             ) : (
-                                <p className="text-xs text-hotel-muted italic pl-1">No recent messages</p>
+                                <p className="text-xs text-hotel-muted italic pl-1">No active chats</p>
                             )}
                         </div>
                     </div>

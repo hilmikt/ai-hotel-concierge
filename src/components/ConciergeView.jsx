@@ -3,10 +3,10 @@ import MessageItem from './MessageItem';
 import InputArea from './InputArea';
 import Sidebar from './Sidebar';
 import useConcierge from '../hooks/useConcierge';
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Menu, Moon, Sun, Plus } from 'lucide-react';
 
 const ConciergeView = () => {
-    const { messages, isTyping, sendMessage } = useConcierge();
+    const { messages, isTyping, sendMessage, sessions, createNewSession, switchSession, currentSessionId } = useConcierge();
     const messagesEndRef = useRef(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -50,7 +50,13 @@ const ConciergeView = () => {
     return (
         <div className="flex flex-col h-[100dvh] bg-hotel-cream dark:bg-hotel-bg text-hotel-text-dark dark:text-hotel-text font-sans transition-colors duration-300 overflow-hidden">
 
-            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} messages={messages} />
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                sessions={sessions}
+                currentSessionId={currentSessionId}
+                onSwitchSession={switchSession}
+            />
 
             {/* Header - Non-fixed, part of flex flow */}
             <header className="flex-none z-40 bg-hotel-cream/80 dark:bg-hotel-bg/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 h-16 flex items-center justify-between px-4 transition-colors duration-300">
@@ -65,9 +71,14 @@ const ConciergeView = () => {
                     <span className="text-xs text-hotel-muted hidden sm:block">The Lumiere</span>
                 </div>
 
-                <button onClick={toggleTheme} className="text-hotel-muted hover:text-hotel-gold transition-colors p-2">
-                    {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-                </button>
+                <div className="flex items-center space-x-1">
+                    <button onClick={createNewSession} className="text-hotel-muted hover:text-hotel-gold transition-colors p-2" title="New Chat">
+                        <Plus size={20} />
+                    </button>
+                    <button onClick={toggleTheme} className="text-hotel-muted hover:text-hotel-gold transition-colors p-2">
+                        {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                    </button>
+                </div>
             </header>
 
             {/* Chat Area - Flex Grow, Scrollable */}
